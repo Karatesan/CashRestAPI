@@ -3,7 +3,11 @@ package com.karatesan.CashRestApi.controllers;
 import com.karatesan.CashRestApi.model.CashCard;
 import com.karatesan.CashRestApi.services.CashCardService;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,10 +35,10 @@ public class CashCardController {
     ); else return ResponseEntity.notFound().build();
   }
   
-  @GetMapping
-  public ResponseEntity<Iterable<CashCard>> findALl(){
-	  return ResponseEntity.ok(service.findAll());
-  }
+//  @GetMapping
+//  public ResponseEntity<Iterable<CashCard>> findAll(){
+//	  return ResponseEntity.ok(service.findAll());
+//  }
 
   @PostMapping
   public ResponseEntity<Void> createCashCard(
@@ -48,6 +52,10 @@ public class CashCardController {
       .toUri();
     return ResponseEntity.created(locationOfNeweCashCardUri).build();
   }
-  
+  @GetMapping
+	public ResponseEntity<List<CashCard>> findAll(Pageable pageable){
+		Page<CashCard> page = service.findAll(pageable);
+		return ResponseEntity.ok(page.getContent());
+	}
   
 }
